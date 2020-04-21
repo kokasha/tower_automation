@@ -1,0 +1,23 @@
+{
+    "AUTH_LDAP_TEAM_MAP": {
+{% for team in ansible_tower.ldap.team_map %}
+        "{{ team.name }}": {
+            "organization": "{{ team.organization }}",
+            "users": [
+{% for user_group in team.user_groups %}
+{% if loop.index == team.user_groups|length %}
+                "{{ user_group }}"
+{% else %}
+                "{{ user_group }}",
+{% endif %}
+{% endfor %}
+            ],
+            "remove": true
+{% if loop.index == ansible_tower.ldap.team_map|length %}
+        }
+{% else %}
+        },
+{% endif %}
+{% endfor %}
+    }
+}

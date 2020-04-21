@@ -1,0 +1,73 @@
+---
+# tasks file for tower_ldap
+- name: "Collect LDAP Config"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: GET
+    # body: "{{ lookup('template', 'ldap.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+  register: ldap_conf
+  tags: get_ldap
+
+- debug: var=ldap_conf
+  tags: get_ldap
+
+- name: "Basic LDAP Config"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/ldap/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: PATCH
+    body: "{{ lookup('template', 'ldap_basic.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+  tags: basic_ldap
+
+- name: "Org Mapping LDAP Config"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/ldap/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: PATCH
+    body: "{{ lookup('template', 'ldap_org_map.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+  register: ldap_org_map
+  tags: ldap_org_map
+
+- debug: var=ldap_org_map
+  tags: ldap_org_map
+
+- name: "Team Mapping LDAP Config"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/ldap/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: PATCH
+    body: "{{ lookup('template', 'ldap_team_map.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+  register: ldap_team_map
+  tags: ldap_team_map
+
+- debug: var=ldap_team_map
+  tags: ldap_team_map

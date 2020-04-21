@@ -1,0 +1,24 @@
+{
+    "AUTH_LDAP_ORGANIZATION_MAP": {
+{% for org in ansible_tower.ldap.organization_map %}
+        "{{ org.name }}": {
+            "admins": "{{ org.admin_group }}",
+            "remove_admins": true,
+            "remove_users": true,
+            "users": [
+{% for user_group in org.user_groups %}
+{% if loop.index == org.user_groups|length %}
+                "{{ user_group }}"
+{% else %}
+                "{{ user_group }}",
+{% endif %}
+{% endfor %}
+            ]
+{% if loop.index == ansible_tower.ldap.organization_map|length %}
+        }
+{% else %}
+        },
+{% endif %}
+{% endfor %}
+    }
+}

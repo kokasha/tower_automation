@@ -2,8 +2,9 @@
 - name: Automate LDAP Config on Tower
   hosts: localhost
   gather_facts: no
-  include_vars: ldap_data.yml
   tasks:
+    - include_vars: ldap_data.yml
+
     - name: Deploy LDAP Config
       import_role:
         name: tower_ldap

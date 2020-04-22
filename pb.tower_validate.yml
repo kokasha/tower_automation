@@ -1,0 +1,18 @@
+---
+- name: Automate LDAP Config on Tower
+  hosts: localhost
+  gather_facts: no
+  vars:
+    tower_username: admin
+    tower_password: ansible123
+    tower_cluster:
+      - url: https://192.168.0.194
+
+
+  tasks:
+    - name: Validate Tower Post Setup
+      import_role:
+        name: tower_post_validation
+      vars:
+        tower_url: tower_cluster[0].url
+      # vars:

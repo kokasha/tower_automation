@@ -2,42 +2,7 @@
 - name: Automate LDAP Config on Tower
   hosts: localhost
   gather_facts: no
-  vars:
-    ansible_tower:
-      url: https://192.168.0.194
-      admin_username: admin
-      admin_password: ansible123
-      ldap:
-        uri: ldap://192.168.0.40:389
-        bind_dn: "uid=tower,cn=sysaccounts,cn=etc,dc=kokasha,dc=lab"
-        #bind_password: tower123
-        bind_password: !vault |
-                  $ANSIBLE_VAULT;1.1;AES256
-                  38313433666238316538343465613565393834376637626338326438663332306163666432653332
-                  6232636562653065323036616137313065363135386433310a316531383161633361613761653737
-                  33313763626339623038363230316234316135356363313336343332373661613062613835623430
-                  3331386366333463370a663265383136366466666561363139343839356230333231626533366136
-                  3964
-        user_search_dn: "CN=users,CN=accounts,DC=kokasha,DC=lab"
-        group_search_dn: "CN=groups,CN=accounts,DC=kokasha,DC=lab"
-        admin_group: "cn=infra-admin,cn=groups,cn=accounts,dc=kokasha,dc=lab"
-        organization_map:
-        - name: "Infra Org"
-          admin_group: "cn=infra-admin,cn=groups,cn=accounts,dc=kokasha,dc=lab"
-          user_groups:
-          - "cn=infra-user,cn=groups,cn=accounts,dc=kokasha,dc=lab"
-          - "cn=infra-admin,cn=groups,cn=accounts,dc=kokasha,dc=lab"
-        team_map:
-        - name: "INFRA_ADMINS"
-          organization: "Infra Org"
-          user_groups:
-          - "cn=infra-admin,cn=groups,cn=accounts,dc=kokasha,dc=lab"
-        - name: "INFRA_USERS"
-          organization: "Infra Org"
-          user_groups:
-          - "cn=infra-user,cn=groups,cn=accounts,dc=kokasha,dc=lab"
-
-
+  include_vars: ldap_data.yml
   tasks:
     - name: Deploy LDAP Config
       import_role:

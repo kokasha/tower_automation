@@ -1,0 +1,16 @@
+---
+# tasks file for tower_post_validation
+- name: "Vaidate Node Health"
+  uri:
+    url: "{{ tower_url | default(default_ansible_tower_url) }}/api/v2/ping/"
+    user: "{{ tower_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ tower_password }}"
+    force_basic_auth: yes
+    method: GET
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+  register: tower_ping
+  tags: get_ldap

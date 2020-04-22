@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include tower_add_credentials"
+      include_role:
+        name: "tower_add_credentials"

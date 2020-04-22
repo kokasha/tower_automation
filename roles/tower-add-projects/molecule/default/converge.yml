@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include tower-add-project"
+      include_role:
+        name: "tower-add-project"

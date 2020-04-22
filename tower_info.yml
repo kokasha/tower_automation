@@ -1,0 +1,24 @@
+ansible_tower:
+  url: https://192.168.0.194
+  admin_username: admin
+  admin_password: ansible123
+  temp_dir: /tmp
+  credentials:
+    - name: 'Test_Machine_Key'
+      description: "Test machine Credentials added by Tower"
+      credential_type: "Machine"
+      organization: "Default"
+      inputs:
+        username: lab
+        ssh_key_data: "{{ lookup('file','~/.ssh/id_rsa') }}"
+  projects:
+    - name: "INFRA_DEMO_PROJECT"
+      description: "Demo Project for Infrastructure"
+      scm_type: "git"
+      scm_url: "https://github.com/redhat-cop/infra-ansible.git"
+      scm_branch: "master"
+      organization: "Default"
+  
+
+  
+      

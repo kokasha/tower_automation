@@ -1,0 +1,41 @@
+---
+- block: # when ansible_tower.credentials is defined
+
+  - name: "Get the existing organizations"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/organizations/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: GET
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+    register: existing_organizations_output
+
+
+  - name: "Get the existing credential types"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/credential_types/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: GET
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+    register: existing_credential_types_output
+
+  - name: "Process the inventory credentials"
+    include_tasks: add-credential.yml
+    with_items:
+    - "{{ ansible_tower.credentials }}"
+    loop_control:
+      loop_var: credential
+
+  when:
+  - ansible_tower.credentials is defined

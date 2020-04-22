@@ -1,0 +1,42 @@
+---
+# tasks file for tower-add-project
+
+- block: # when ansible_tower.projects is defined
+
+  - name: "Get the existing organizations"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/organizations/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: GET
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+    register: existing_organizations_output
+
+  # - name: "Get the existing projects"
+  #   uri:
+  #     url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/projects/"
+  #     user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+  #     password: "{{ ansible_tower.admin_password }}"
+  #     force_basic_auth: yes
+  #     method: GET
+  #     body_format: 'json'
+  #     headers:
+  #       Content-Type: "application/json"
+  #       Accept: "application/json"
+  #     validate_certs: no
+  #   register: existing_projects_output
+
+  - name: "Add New projects"
+    include_tasks: add-project.yml
+    with_items:
+    - "{{ ansible_tower.projects }}"
+    loop_control:
+      loop_var: project
+
+  when:
+  - ansible_tower.projects is defined

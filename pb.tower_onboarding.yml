@@ -1,0 +1,15 @@
+---
+- name: Automate LDAP Config on Tower
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - tower_info.yml
+  tasks:
+    - name: Create Tower Credentials
+      import_role:
+        name: tower-add-credentials
+
+    - name: Create Tower Projects
+      import_role:
+        name: tower-add-projects
+

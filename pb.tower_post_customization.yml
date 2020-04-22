@@ -1,0 +1,11 @@
+---
+- name: Automate LDAP Config on Tower
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - tower_info.yml
+  tasks:
+    - name: Validate Tower Post Setup
+      import_role:
+        name: tower_post_customization
+

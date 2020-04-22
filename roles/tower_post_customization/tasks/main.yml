@@ -1,0 +1,24 @@
+---
+# tasks file for tower_post_customization
+- name: SET Custom Facts
+  set_fact:
+    CUSTOM_TOWER_SETTING: "{{ {}| combine( {
+                                    'AWX_PROOT_BASE_PATH': ansible_tower.temp_dir
+                                    } )   
+                          }}"
+
+- debug: var=CUSTOM_TOWER_SETTING
+
+- name: "Push Custom Tower Settings"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/settings/jobs/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: PATCH
+    body: "{{ CUSTOM_TOWER_SETTING | to_json}}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no

@@ -15,9 +15,22 @@ ansible_tower:
     - name: "INFRA_DEMO_PROJECT"
       description: "Demo Project for Infrastructure"
       scm_type: "git"
-      scm_url: "https://github.com/redhat-cop/infra-ansible.git"
+      scm_url: "https://github.com/kokasha/tower_automation.git"
       scm_branch: "master"
       organization: "Default"
+  inventories:
+  - name: "INFRA_DEMO_INVENTORY"
+    description: "Demo Inveventory for infrastructure"
+    organization: "Default"
+    # variables: "---"
+    sources:
+    - name: "INFRA_DEMO_PROJECT_HOSTS"
+      description: "Static Inventory File"
+      # credential: "Credential"
+      source: "scm"
+      source_project: "INFRA_DEMO_PROJECT"
+      source_path: "inventory/dev/hosts"
+      # source_vars: "---\nFIRST: John\nLAST: Doe"
   
 
   

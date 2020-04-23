@@ -1,0 +1,28 @@
+
+- block: # when ansible_tower.credentials is defined
+  - name: "Get existing Projects"
+    uri:
+      url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/projects/"
+      user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+      password: "{{ ansible_tower.admin_password }}"
+      force_basic_auth: yes
+      method: GET
+      body_format: 'json'
+      headers:
+        Content-Type: "application/json"
+        Accept: "application/json"
+      validate_certs: no
+    register: existing_projects
+
+
+  - name: Validate All Created Projects
+    assert:
+      that:
+        - item.name in existing_projects.json.results | map(attribute='name') | list
+
+    loop: "{{ansible_tower.projects}}"
+    loop_control:
+      label: "{{item.name}}"
+
+  when:
+  - ansible_tower.projects is defined

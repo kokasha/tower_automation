@@ -1,0 +1,12 @@
+---
+# tasks file for tower-post-validate
+
+- name: Validate Node Health
+  import_tasks: validate_node_health.yml
+
+
+- name: Validate all Credentials are Created
+  import_tasks: validate_credentials.yml
+
+- name: Validate all Created Projects are Created
+  import_tasks: validate_projects.yml

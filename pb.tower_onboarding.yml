@@ -1,15 +1,26 @@
 ---
-- name: Automate LDAP Config on Tower
+- name: Tower Cluster Post Customization
   hosts: localhost
   gather_facts: true
   vars_files:
     - tower_info.yml
   tasks:
+    - name: Validate Tower Post Setup
+      import_role:
+        name: tower_post_customization
+      tags: custom_settings
+
     - name: Create Tower Credentials
       import_role:
         name: tower-add-credentials
+      tags: credentials
 
     - name: Create Tower Projects
       import_role:
         name: tower-add-projects
+      tags: projects
 
+    - name: Create Tower Inventory
+      import_role:
+        name: tower-add-inventory
+      tags: inventory

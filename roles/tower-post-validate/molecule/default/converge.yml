@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include tower-post-validate"
+      include_role:
+        name: "tower-post-validate"

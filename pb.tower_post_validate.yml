@@ -1,5 +1,5 @@
 ---
-- name: Automate LDAP Config on Tower
+- name: Validate Tower Post Deployment
   hosts: localhost
   gather_facts: no
   vars_files:
@@ -7,5 +7,5 @@
   tasks:
     - name: Validate Tower Post Setup
       import_role:
-        name: tower_post_customization
+        name: tower-post-validate
 

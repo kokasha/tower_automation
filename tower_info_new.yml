@@ -1,0 +1,53 @@
+ansible_tower:
+  url: https://192.168.0.194
+  admin_username: admin
+  admin_password: ansible123
+
+  settings:
+    - name: AWX_PROOT_BASE_PATH
+      value: /var/tmp
+
+  organizations:
+    - name: "Networking"
+      description: "Networking Team Organization"
+
+  teams:
+    - name: "Netowrk Operation"
+      organization: "Networking" 
+
+    - name: "Netowrk Design"
+      organization: "Networking"
+
+  projects:
+    - name: "RHEL_NETWORK_AUTOMATION"
+      description: "RHEL Demo Project for Networking"
+      scm_type: "git"
+      scm_url: "https://github.com/kokasha/rhel_demo.git"
+      scm_branch: "master"
+      organization: "Networking"
+
+  inventories:
+  - name: "RHEL_DEV_TESTING"
+    description: "RHEL Demo Invenronment"
+    organization: "Networking"
+
+  credentials:
+    - name: 'RHEL_Networking_Key'
+      description: "Test machine Credentials added by Tower"
+      credential_type: "Machine"
+      organization: "Networking"
+      inputs:
+        username: lab
+        ssh_key_data: "{{ lookup('file','~/.ssh/id_rsa') }}"
+
+  inventory_sources:
+    - name: "INFRA_DEMO_PROJECT_HOSTS"
+      description: "Static Inventory File"
+      source: "scm"
+      source_project: "INFRA_DEMO_PROJECT"
+      source_path: "inventory/dev/hosts"
+      inventory: "INFRA_DEMO_INVENTORY"
+  
+
+  
+      

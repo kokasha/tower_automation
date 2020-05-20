@@ -12,25 +12,23 @@ ansible_tower:
         username: lab
         ssh_key_data: "{{ lookup('file','~/.ssh/id_rsa') }}"
   projects:
-    - name: "INFRA_DEMO_PROJECT"
+    - name: "TOWER_AUTOMATION"
       description: "Demo Project for Infrastructure"
       scm_type: "git"
-      scm_url: "https://github.com/kokasha/tower_automation.git"
+      scm_url: "https://github.com/kokasha/tower_automation_demo.git"
       scm_branch: "master"
       organization: "Default"
+  inventory_sources:
+    - name: "INFRA_DEMO_PROJECT_HOSTS"
+      description: "Static Inventory File"
+      source: "scm"
+      source_project: "INFRA_DEMO_PROJECT"
+      source_path: "inventory/dev/hosts"
+      inventory: "INFRA_DEMO_INVENTORY"
   inventories:
   - name: "INFRA_DEMO_INVENTORY"
     description: "Demo Inveventory for infrastructure"
     organization: "Default"
-    # variables: "---"
-    sources:
-    - name: "INFRA_DEMO_PROJECT_HOSTS"
-      description: "Static Inventory File"
-      # credential: "Credential"
-      source: "scm"
-      source_project: "INFRA_DEMO_PROJECT"
-      source_path: "inventory/dev/hosts"
-      # source_vars: "---\nFIRST: John\nLAST: Doe"
   
 
   

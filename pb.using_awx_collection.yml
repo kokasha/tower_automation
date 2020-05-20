@@ -1,0 +1,94 @@
+- name: Tower Cluster Post Customization
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - tower_info_new.yml
+  
+  tasks:
+    - name: Update Ansible Tower Settings
+      awx.awx.tower_settings:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        validate_certs: no
+      loop: "{{ ansible_tower.settings }}"
+      when: ansible_tower.settings is defined
+
+    - name: Create all Required Organizations
+      awx.awx.tower_organization:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        validate_certs: no
+      loop: "{{ ansible_tower.organizations }}"
+
+    - name: Create all required Teams
+      awx.awx.tower_team:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        organization: "{{ item.organization }}"
+        validate_certs: no
+      loop: "{{ ansible_tower.teams }}"
+      when: ansible_tower.teams is defined
+
+    - name: Create All Required Projects
+      awx.awx.tower_project:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        organization: "{{ item.organization }}"
+        scm_url: "{{ item.scm_url }}"
+        scm_type: "{{ item.scm_type }}"
+        validate_certs: no
+        state: present
+      loop: "{{ ansible_tower.projects }}"
+
+    - name: Create All Required Credentials
+      awx.awx.tower_credential:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        organization: "{{ item.organization }}"
+        credential_type: "{{ item.credential_type }}"
+        inputs: "{{ item.inputs }}"
+        validate_certs: no
+        state: present
+      loop: "{{ ansible_tower.credentials }}"
+
+    - name: Create All Required Inventories
+      awx.awx.tower_inventory:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        organization: "{{ item.organization }}"
+        validate_certs: no
+        state: present
+      loop: "{{ ansible_tower.inventories }}"
+
+    - name: Create All Required Credentials
+      awx.awx.tower_inventory_source:
+        tower_host: "{{ ansible_tower.url }}"
+        tower_username: "{{ ansible_tower.admin_username }}"
+        tower_password: "{{ ansible_tower.admin_password }}"
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        inventory: "{{ item.inventory }}"
+        source: "{{ item.source | default(omit) }}"
+        source_project: "{{ item.source_project }}"
+        source_path: "{{ item.source_path }}"
+        validate_certs: no
+        state: present
+      loop: "{{ ansible_tower.inventory_sources }}"
+      when: ansible_tower.inventory_sources is defined
